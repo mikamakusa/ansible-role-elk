@@ -1,0 +1,22 @@
+---
+
+- name: Get PGP key
+  apt_key:
+    url: "{{ url }}/GPG-KEY-elasticsearch"
+
+- name: add repo
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] {{ url }}/packages/8.x/apt stable main"
+    state: present
+    update_cache: yes
+
+
+- name: install packages
+  apt:
+    force: true
+    install_recommends: true
+    update_cache: true
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ package.debian }}"

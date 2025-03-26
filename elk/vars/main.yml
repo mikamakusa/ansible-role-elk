@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+packages:
+  debian:
+    - apt-transport-https
+    - elasticsearch
+  centos:
+    - elasticsearch-8.17.4-x86_64.rpm
+
+url: "https://artifacts.elastic.com"

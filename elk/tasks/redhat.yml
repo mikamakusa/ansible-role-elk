@@ -1,0 +1,25 @@
+---
+
+- name: check package exist
+  stat:
+    path: "/opt/elastic-install-files"
+  register: elastic_pkg
+
+- name: get package
+  get_url:
+    url: "{{ url }}/downloads/elasticsearch/{{ item }}"
+    dest: "/opt/elastic-install-files"
+    validate_certs: false
+    force: true
+    mode: 0755
+  when: elastic_pkg.stat.exists == False
+  loop:
+    - "{{ package.centos }}"
+
+- name: Install package
+  become: yes
+  dnf:
+    name: "/opt/elastic-install-files/{{ item }}"
+    state: present
+  loop:
+    - "{{ package.centos }}"
