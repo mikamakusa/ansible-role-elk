@@ -1,3 +1,8 @@
 #SPDX-License-Identifier: MIT-0
 ---
-# handlers file for elk
+- name: start Elasticsearch
+  systemd:
+    name: elasticsearch.service
+    state: started
+    enabled: true
+    daemon_reload: true

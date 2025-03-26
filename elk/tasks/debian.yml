@@ -1,5 +1,13 @@
 ---
 
+- name: Java installation
+  become: true
+  apt:
+    force: true
+    name: openjdk-{{}}-jre-headless
+    state: present
+    update_cache: true
+
 - name: Get PGP key
   apt_key:
     url: "{{ url }}/GPG-KEY-elasticsearch"
@@ -20,3 +28,4 @@
     state: present
   loop:
     - "{{ package.debian }}"
+  notify: Start Elasticsearch

@@ -9,10 +9,3 @@
   gather_facts: true
   when:
     - ansible_os_family == "CentOS"
-
-- name: start elastic
-  systemd:
-    name: elasticsearch.service
-    state: started
-    enabled: true
-    daemon_reload: true

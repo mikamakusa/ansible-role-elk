@@ -1,5 +1,10 @@
 ---
 
+- name: Java installation
+  dnf:
+    name: openjdk-{{}}-jre-headless
+    state: present
+
 - name: check package exist
   stat:
     path: "/opt/elastic-install-files"
@@ -23,3 +28,4 @@
     state: present
   loop:
     - "{{ package.centos }}"
+  notify: Start Elasticsearch
