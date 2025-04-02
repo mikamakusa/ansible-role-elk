@@ -4,7 +4,7 @@
   become: true
   apt:
     force: true
-    name: openjdk-{{}}-jre-headless
+    name: "openjdk-{{ elastic.openjdk_version }}-jre-headless"
     state: present
     update_cache: true
 
@@ -14,10 +14,9 @@
 
 - name: add repo
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] {{ url }}/packages/8.x/apt stable main"
+    repo: "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] {{ elastic.url }}/packages/8.x/apt stable main"
     state: present
     update_cache: yes
-
 
 - name: install packages
   apt:
@@ -27,5 +26,7 @@
     name: "{{ item }}"
     state: present
   loop:
-    - "{{ package.debian }}"
+    - apt-transport-https
+    - "{{ elastic.package }}"
   notify: Start Elasticsearch
+

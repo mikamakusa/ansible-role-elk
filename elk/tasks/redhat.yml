@@ -2,30 +2,26 @@
 
 - name: Java installation
   dnf:
-    name: openjdk-{{}}-jre-headless
+    name: "openjdk-{{ elastic.openjdk_version }}-jre-headless"
     state: present
 
-- name: check package exist
-  stat:
-    path: "/opt/elastic-install-files"
-  register: elastic_pkg
+- name: install public key
+  rpm_key:
+    key: "https://{{ elastic.url }}/GPG-KEY-elasticsearch"
+    state: present
 
-- name: get package
-  get_url:
-    url: "{{ url }}/downloads/elasticsearch/{{ item }}"
-    dest: "/opt/elastic-install-files"
-    validate_certs: false
-    force: true
-    mode: 0755
-  when: elastic_pkg.stat.exists == False
-  loop:
-    - "{{ package.centos }}"
+- name: Add repository
+  yum_repository:
+    name: elasticsearch
+    baseurl: https://{{ elastic.url }}/packages/8.x/yum
+    gpgcheck: yes
+    gpgkey: https://{{ elastic.url }}/GPG-KEY-elasticsearch
+    enabled: yes
+    state: present
 
-- name: Install package
-  become: yes
-  dnf:
-    name: "/opt/elastic-install-files/{{ item }}"
+- name: install packages
+  yum:
+    name: "{{ item }}"
     state: present
   loop:
-    - "{{ package.centos }}"
-  notify: Start Elasticsearch
+    - "{{ elastic.packages }}"
